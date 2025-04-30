@@ -3,36 +3,55 @@
 
 <h2 class="text-primary mb-4">🛒 Product Manager</h2>
 
+<!-- ✅ فرم افزودن محصول -->
+<div class="card p-3 mb-4">
+    <h5 class="text-success">➕ Add New Product</h5>
+
+    <div class="mb-2">
+        <label>Name:</label>
+        <input type="text" class="form-control" @bind="newProduct.Name" />
+    </div>
+
+    <div class="mb-2">
+        <label>Price:</label>
+        <input type="number" class="form-control" @bind="newProduct.Price" />
+    </div>
+
+    <div class="form-check mb-2">
+        <input type="checkbox" class="form-check-input" id="activeToggle" @bind="newProduct.IsActive" />
+        <label class="form-check-label" for="activeToggle">Is Active</label>
+    </div>
+
+    <button class="btn btn-success" @onclick="AddProduct">Add Product</button>
+</div>
+
+<!-- ✅ اطلاعات کلی -->
 <p><strong>Favorite Count:</strong> @FavoriteCount</p>
 <p><strong>Selected Product:</strong> @SelectedProduct</p>
 
-<div class="container">
-    <div class="row g-3">
-        @foreach (var prod in ProductList)
-        {
-            <_IndividualProduct Product="prod"
-                                OnFavoriteUpdated="FavoriteCountChange"
-                                OnProductSelectedChange="UpdateSelectedProduct" />
-        }
-    </div>
+<!-- ✅ نمایش محصولات -->
+<div class="row g-3">
+    @foreach (var prod in ProductList)
+    {
+        <_IndividualProduct Product="prod"
+                            OnFavoriteUpdated="FavoriteCountChange"
+                            OnProductSelectedChange="UpdateSelectedProduct"
+                            SelectedProductName="@SelectedProduct" />   <!-- ⬅️ اصلاح اصلی -->
+    }
 </div>
 
-@code {
-    private int FavoriteCount { get; set; } = 0;
+@code
+{
     public string SelectedProduct { get; set; } = "";
+    private int FavoriteCount { get; set; } = 0;
 
-    private void UpdateSelectedProduct(string productName)
-    {
-        SelectedProduct = productName;
-    }
-
-    private void FavoriteCountChange(bool isFavorite)
-    {
-        if (isFavorite)
-            FavoriteCount++;
-        else
-            FavoriteCount--;
-    }
+    private Product newProduct = new()
+        {
+            Name = "",
+            Price = 0,
+            IsActive = false,
+            ProductProperties = new List<Product_Prop>()
+        };
 
     private List<Product> ProductList = new()
     {
@@ -41,26 +60,40 @@
             Id = 1,
             Name = "Product 1",
             IsActive = true,
-            Price = 5,
-            ProductProperties = new List<Product_Prop>
-            {
-                new Product_Prop { Id = 1, Key = "Color", Value = "Red" },
-                new Product_Prop { Id = 2, Key = "Size", Value = "20oz" },
-                new Product_Prop { Id = 3, Key = "Flavor", Value = "Rose" }
-            }
+            Price = 10,
+            ProductProperties = new List<Product_Prop>()
         },
         new Product
         {
             Id = 2,
             Name = "Product 2",
             IsActive = false,
-            Price = 10,
-            ProductProperties = new List<Product_Prop>
-            {
-                new Product_Prop { Id = 1, Key = "Color", Value = "Blue" },
-                new Product_Prop { Id = 2, Key = "Size", Value = "18oz" },
-                new Product_Prop { Id = 3, Key = "Flavor", Value = "Lily" }
-            }
+            Price = 15,
+            ProductProperties = new List<Product_Prop>()
         }
     };
+
+    private void AddProduct()
+    {
+        if (string.IsNullOrWhiteSpace(newProduct.Name)) return;
+
+        int nextId = ProductList.Any() ? ProductList.Max(p => p.Id) + 1 : 1;
+
+        ProductList.Add(new Product
+            {
+                Id = nextId,
+                Name = newProduct.Name,
+                Price = newProduct.Price,
+                IsActive = newProduct.IsActive,
+                ProductProperties = new List<Product_Prop>()
+            });
+
+        newProduct = new Product { ProductProperties = new List<Product_Prop>() };
+    }
+
+    private void FavoriteCountChange(bool isFavorite)
+        => FavoriteCount += isFavorite ? 1 : -1;
+
+    private void UpdateSelectedProduct(string productName)
+        => SelectedProduct = productName;
 }
