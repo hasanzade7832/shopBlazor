@@ -1,0 +1,60 @@
+﻿@using Models
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="col-md-6" @onclick="(e) => SelectedProductUpdated(e, Product.Name)">
+    <div class="card shadow-sm border border-2">
+        <div class="card-body bg-light">
+            <h5 class="card-title text-secondary">Product #@Product.Id</h5>
+            <p><strong>Name:</strong> @Product.Name</p>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="active_@Product.Id"
+                       @bind="Product.IsActive" />
+                <label class="form-check-label" for="active_@Product.Id">Is Active</label>
+            </div>
+
+            <div class="form-check mb-2">
+                <input type="checkbox"
+                       class="form-check-input"
+                       @onchange="FavoriteUpdated"
+                       id="fav_@Product.Id" />
+                <label class="form-check-label" for="fav_@Product.Id">Add to Favorites</label>
+            </div>
+
+            @if (Product.IsActive)
+            {
+                <div class="border p-2 rounded bg-white mb-2">
+                    <h6 class="text-success">Properties:</h6>
+                    @foreach (var prop in Product.ProductProperties)
+                    {
+                        <p class="mb-1">
+                            <span class="badge bg-info">@prop.Key</span>
+                            <span class="ms-2">@prop.Value</span>
+                        </p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Product Product { get; set; }
+
+    [Parameter] public EventCallback<bool> OnFavoriteUpdated { get; set; }
+
+    [Parameter] public EventCallback<string> OnProductSelectedChange { get; set; }
+
+    private async Task FavoriteUpdated(ChangeEventArgs e)
+    {
+        var isFavorite = e?.Value as bool? ?? false;
+        await OnFavoriteUpdated.InvokeAsync(isFavorite);
+    }
+
+    private async Task SelectedProductUpdated(MouseEventArgs e, string productName)
+    {
+        await OnProductSelectedChange.InvokeAsync(productName);
+    }
+}

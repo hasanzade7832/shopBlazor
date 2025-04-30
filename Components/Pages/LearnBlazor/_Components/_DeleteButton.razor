@@ -1,0 +1,17 @@
+﻿<!-- دکمه حذف با نام و شناسه محصول -->
+<button class="btn btn-danger btn-sm"
+        style="width: 100%"
+        @onclick="OnClick">
+    🗑 Delete "@ProductName" (ID: @ProductId)
+</button>
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    [Parameter]
+    public string ProductName { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}
