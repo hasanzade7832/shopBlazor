@@ -1,0 +1,75 @@
+﻿@* @page "/learn-routing" *@
+@* @page "/learn-routing/{param1:int}" *@
+@* @page "/learn-routing/{param1:int}/{param2}" *@
+@* @page "/learn-routing/{*pageParameters}" *@
+
+@* <h3>LearnRouting</h3> *@
+
+@* <p>پارامتر اول: @param1</p> *@
+@* <p>پارامتر دوم: @param2</p> *@
+@* <p>📦 کل مسیر دریافتی: @pageParameters</p> *@
+
+@* <div style="height: 1000px;"></div> *@
+@* <h2 id="target-element">🎯 اینجا نقطه‌ی هدف ماست</h2> *@
+
+
+@* @code { *@
+@*     // [Parameter] *@
+@*     // public int? param1 { get; set; } *@
+
+@*     // [Parameter] *@
+@*     // public string? param2 { get; set; } *@
+
+@*     // [Parameter] *@
+@*     // public string? pageParameters { get; set; } = ""; *@
+
+}
+
+@* @page "/learn-routing" *@
+@* @inject NavigationManager Navigation *@
+
+@* <h3>📘 صفحه‌ی LearnRouting</h3> *@
+
+@* <hr /> *@
+
+@* <div class="mb-3"> *@
+@*     <button class="btn btn-primary" @onclick="LoadParameters">📥 دریافت پارامترها از Query String</button> *@
+@* </div> *@
+
+@* <p>پارامتر ۱: <strong>@param1</strong></p> *@
+@* <p>پارامتر ۲: <strong>@param2</strong></p> *@
+
+@* @code { *@
+@*     // 🧾 پارامترهای دریافتی *@
+@*     [Parameter] public string? param1 { get; set; } *@
+@*     [Parameter] public string? param2 { get; set; } *@
+
+@*     // 📦 متد برای گرفتن مقادیر از Query String *@
+@*     private void LoadParameters() *@
+@*     { *@
+@*         var uri = new Uri(Navigation.Uri); *@
+@*         var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query); *@
+
+@*         param1 = queryParams["param1"]; *@
+@*         param2 = queryParams["param2"]; *@
+@*     } *@
+@* } *@
+
+@page "/learn-routing"
+
+<h3>📘 صفحه LearnRouting</h3>
+<hr />
+
+<p>🔹 پارامتر ۱ (از Query String): <strong>@param1</strong></p>
+<p>🔹 پارامتر ۲ (از Query String): <strong>@param2</strong></p>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? param1 { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? param2 { get; set; }
+}
+
