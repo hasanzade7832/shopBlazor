@@ -18,11 +18,11 @@
                 🛍️ <span class="text-primary">Product #@Product.Id</span>
             </h5>
 
-            <p><strong>📛 Name:</strong> @Product.Name</p>
+            <p><strong>💖 Name:</strong> @Product.Name</p>
             <p><strong>💰 Price:</strong> <span class="text-success fw-bold">@Product.Price $</span></p>
 
             <p>
-                <strong>🔄 Status:</strong>
+                <strong>📊 Status:</strong>
                 @if (Product.IsActive)
                 {
                     <span class="badge bg-success">Active</span>
@@ -41,6 +41,7 @@
                 <label class="form-check-label" for="fav_@Product.Id">⭐ Add to Favorites</label>
             </div>
 
+            <!-- ✅ نمایش ویژگی‌ها (ProductProperties) -->
             @if (Product.IsActive && Product.ProductProperties?.Any() == true)
             {
                 <div class="p-2 border rounded bg-light">
